@@ -1,0 +1,33 @@
+# Pliki i foldery Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Pliki budowania i tymczasowe
+build/
+*.obj
+*.pdb
+*.exe
+*.log
+*.ilk
+*.ipch
+*.idb
+*.tlog
+*.lastbuildstate
+*.aps
+
+# Inne niepotrzebne pliki
+.DS_Store
+Thumbs.db
+
+# Pliki i foldery SFML
+SFML-2.6.1/
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.framework
