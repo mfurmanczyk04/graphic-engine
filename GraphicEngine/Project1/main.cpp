@@ -1,24 +1,14 @@
-#include <iostream>
-#include <SFML/Graphics.hpp>
+// main.cpp
+#include "Engine.hpp"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    Engine engine;
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
+    if (engine.init()) {
+        engine.setGraphicsMode(false, sf::VideoMode(800, 600));
+        engine.setParameters(60, true, true);
+        engine.run();
     }
 
     return 0;
