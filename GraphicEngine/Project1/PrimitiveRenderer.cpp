@@ -10,3 +10,7 @@ void PrimitiveRenderer::drawCircle(float x, float y, float radius, Color color) 
   circleShape.setRadius(radius);
   _window->draw(circleShape);
 }
+
+void PrimitiveRenderer::clearScreen(Color color) {
+  _window->clear(sfColorFromColor(color));
+}

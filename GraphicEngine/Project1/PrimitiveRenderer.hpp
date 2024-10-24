@@ -11,6 +11,7 @@ class PrimitiveRenderer {
 public:
   PrimitiveRenderer(sf::RenderWindow *window): _window(window) {};
   void drawCircle(float x, float y, float radius, Color color);
+  void clearScreen(Color color);
 private:
   sf::RenderWindow *_window;
   sf::CircleShape circleShape;

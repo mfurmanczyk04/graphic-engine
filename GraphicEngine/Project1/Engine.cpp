@@ -2,6 +2,7 @@
 #include "Engine.hpp"
 
 #include "Color.hpp"
+#include "Point2D.hpp"
 #include <iostream>
 
 Engine::Engine() :
@@ -98,8 +99,10 @@ void Engine::update()
 
 void Engine::render()
 {
-    clearScreen(sf::Color::Black);
+    Point2D point(80.0f, 80.0f);
+    primitiveRenderer->clearScreen(Color::Black);
     primitiveRenderer->drawCircle(20.0f, 20.0f, 30.0f, Color::Magenta);
+    point.draw(primitiveRenderer);
     window->display();
 }
 
