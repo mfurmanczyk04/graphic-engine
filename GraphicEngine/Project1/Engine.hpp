@@ -3,7 +3,7 @@
 #define ENGINE_HPP
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
+#include "PrimitiveRenderer.hpp"
 
 class Engine
 {
@@ -34,6 +34,7 @@ private:
     bool enableKeyboard;
     bool enableMouse;
     sf::Clock clock;
+    PrimitiveRenderer *primitiveRenderer; 
 };
 
 #endif

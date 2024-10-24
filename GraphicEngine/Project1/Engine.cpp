@@ -1,8 +1,12 @@
 // Engine.cpp
 #include "Engine.hpp"
 
+#include "Color.hpp"
+#include <iostream>
+
 Engine::Engine() :
     window(nullptr),
+    primitiveRenderer(nullptr),
     isFullscreen(false),
     frameRate(60),
     enableKeyboard(true),
@@ -21,7 +25,8 @@ bool Engine::init()
         sf::VideoMode videoMode = sf::VideoMode(800, 600);
         window = new sf::RenderWindow(videoMode, "SFML Engine", isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
         window->setFramerateLimit(frameRate);
-        std::cout << "SMFL loaded succesfully.\n";
+        primitiveRenderer = new PrimitiveRenderer(window);
+        std::cout << "SFML loaded succesfully.\n";
         return true;
     }
     catch (const std::exception& e) {
@@ -35,7 +40,9 @@ void Engine::setGraphicsMode(bool fullscreen, sf::VideoMode videoMode)
     isFullscreen = fullscreen;
     if (window) {
         delete window;
+        delete primitiveRenderer;
         window = new sf::RenderWindow(videoMode, "SFML Engine", isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
+        primitiveRenderer = new PrimitiveRenderer(window);
     }
 }
 
@@ -92,11 +99,7 @@ void Engine::update()
 void Engine::render()
 {
     clearScreen(sf::Color::Black);
-
-    sf::CircleShape shape(50.f);
-    shape.setFillColor(sf::Color::Green);
-    window->draw(shape);
-
+    primitiveRenderer->drawCircle(20.0f, 20.0f, 30.0f, Color::Magenta);
     window->display();
 }
 
@@ -114,6 +117,10 @@ void Engine::logError(const std::string& message)
 
 void Engine::cleanup()
 {
+    if (primitiveRenderer) {
+      delete primitiveRenderer;
+      primitiveRenderer = nullptr;
+    }
     if (window) {
         delete window;
         window = nullptr;
