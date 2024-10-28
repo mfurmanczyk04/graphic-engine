@@ -3,6 +3,7 @@
 #define ENGINE_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 #include "PrimitiveRenderer.hpp"
 
 class Engine
@@ -29,6 +30,8 @@ private:
     void cleanup();
 
     sf::RenderWindow* window;
+    sf::RenderTexture renderTexture;
+    sf::Sprite windowSprite;
     bool isFullscreen;
     int frameRate;
     bool enableKeyboard;

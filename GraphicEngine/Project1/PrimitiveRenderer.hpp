@@ -9,7 +9,7 @@
 
 class PrimitiveRenderer {
 public:
-  PrimitiveRenderer(sf::RenderWindow *window) : _window(window) {};
+  PrimitiveRenderer(sf::RenderTexture *renderTexture) : _rt(renderTexture) {};
   void drawCircleBuiltin(float x, float y, float radius);
   void drawCircle(float x, float y, float radius);
   void drawEllipsis(float x, float y, float rx, float ry);
@@ -19,8 +19,9 @@ public:
   void clearScreen();
   void setPixel(float x, float y);
   void setColor(Color color);
+  void boundryFill(unsigned int x, unsigned int y, Color fillColor, Color backgroundColor, bool moore = false);
 private:
-  sf::RenderWindow *_window;
+  sf::RenderTexture *_rt;
   sf::Color _color = sf::Color::White;
 };
 #endif

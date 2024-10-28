@@ -3,6 +3,7 @@
 
 #include "Color.hpp"
 #include "Point2D.hpp"
+#include <SFML/Graphics/RenderTexture.hpp>
 #include <iostream>
 
 Engine::Engine() :
@@ -26,7 +27,9 @@ bool Engine::init()
         sf::VideoMode videoMode = sf::VideoMode(800, 600);
         window = new sf::RenderWindow(videoMode, "SFML Engine", isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
         window->setFramerateLimit(frameRate);
-        primitiveRenderer = new PrimitiveRenderer(window);
+        auto size = window->getSize();
+        renderTexture.create(size.x,size.y);
+        primitiveRenderer = new PrimitiveRenderer(&renderTexture);
         std::cout << "SFML loaded succesfully.\n";
         return true;
     }
@@ -43,7 +46,9 @@ void Engine::setGraphicsMode(bool fullscreen, sf::VideoMode videoMode)
         delete window;
         delete primitiveRenderer;
         window = new sf::RenderWindow(videoMode, "SFML Engine", isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
-        primitiveRenderer = new PrimitiveRenderer(window);
+        auto size = window->getSize();
+        renderTexture.create(size.x,size.y);
+        primitiveRenderer = new PrimitiveRenderer(&renderTexture);
     }
 }
 
@@ -102,7 +107,9 @@ void Engine::render()
     primitiveRenderer->setColor(Color::Black);
     primitiveRenderer->clearScreen();
     primitiveRenderer->setColor(Color::Magenta);
-    primitiveRenderer->drawCircle(20.0f, 20.0f, 30.0f);
+
+    primitiveRenderer->drawCircle(200.0f, 200.0f, 30.0f);
+    //primitiveRenderer->boundryFill(200, 200, Color::Magenta, Color::Black);
 
     //primitiveRenderer->drawLineBuiltin(800.0f, 600.0f, 700.0f, 500.0f);
     primitiveRenderer->drawLine(800.0f, 600.0f, 700.0f, 500.0f);
@@ -110,6 +117,12 @@ void Engine::render()
     Vector2D pointPos(80.0f, 80.0f);
     Point2D point(pointPos);
     point.draw(primitiveRenderer);
+
+
+    renderTexture.display();
+    windowSprite.setTexture(renderTexture.getTexture());
+    window->clear();
+    window->draw(windowSprite);
     window->display();
 }
 

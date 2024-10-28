@@ -26,6 +26,54 @@ void PrimitiveRenderer::drawEllipsis(float x, float y, float rx, float ry) {
   }
 }
 
+struct ScreenPixel {
+  unsigned int x;
+  unsigned int y;
+  sf::Color color;
+};
+
+
+void PrimitiveRenderer::boundryFill(unsigned int x, unsigned int y, Color fillColor, Color backgroundColor, bool moore) {
+  sf::Sprite outputSprite;
+  sf::Texture outputTexture;
+
+  sf::Color _fillColor = sfColorFromColor(fillColor);
+  sf::Color _backgroundColor = sfColorFromColor(backgroundColor);
+
+  sf::Image image = _rt->getTexture().copyToImage();
+  std::vector<ScreenPixel> pixels;
+  pixels.push_back(ScreenPixel {
+    x,
+    y,
+    image.getPixel(x, y)
+  });
+
+  while (!pixels.empty()) {
+    ScreenPixel p = pixels[pixels.size() - 1];
+    if(p.x < 0) return;
+    if(p.y < 0) return;
+    if(p.x >= 500) return;
+    if(p.y >= 500) return;
+    pixels.pop_back();
+    if (p.color == _fillColor)
+      continue;
+    if (p.color != _backgroundColor)
+      continue;
+    p.color = _fillColor;
+    image.setPixel(p.x, p.y, p.color);
+    pixels.push_back(ScreenPixel { p.x+1, p.y, image.getPixel(p.x+1, p.y) });
+    pixels.push_back(ScreenPixel { p.x-1, p.y, image.getPixel(p.x-1, p.y) });
+    pixels.push_back(ScreenPixel { p.x, p.y+1, image.getPixel(p.x, p.y+1) });
+    pixels.push_back(ScreenPixel { p.x, p.y-1, image.getPixel(p.x, p.y-1) });
+  }
+
+  outputTexture.loadFromImage(image);
+  outputSprite.setTexture(outputTexture);
+  _rt->draw(outputSprite);
+  
+  
+}
+
 void PrimitiveRenderer::drawCircle(float x, float y, float radius) {
   std::vector<Vector2D> circlePoints;
   for (float alpha = 0.0f; alpha <= PI/2; alpha += CIRCLE_STEP)  {
@@ -45,13 +93,13 @@ void PrimitiveRenderer::drawCircleBuiltin(float x, float y, float radius) {
   circleShape.setPosition(x, y);
   circleShape.setFillColor(_color);
   circleShape.setRadius(radius);
-  _window->draw(circleShape);
+  _rt->draw(circleShape);
 }
 
 
 void PrimitiveRenderer::setPixel(float x, float y) {
   sf::Vertex vert = sf::Vertex(sf::Vector2(x,y), _color);
-  _window->draw(&vert, 1, sf::Points);
+  _rt->draw(&vert, 1, sf::Points);
 }
 
 void PrimitiveRenderer::setColor(Color color) {
@@ -63,7 +111,7 @@ void PrimitiveRenderer::drawLineBuiltin(float x0, float y0, float x1, float y1) 
     sf::Vertex(sf::Vector2(x0, y0), _color),
     sf::Vertex(sf::Vector2(x1, y1), _color),
   };
-  _window->draw(lineVerts, 2, sf::Lines);
+  _rt->draw(lineVerts, 2, sf::Lines);
 }
 
 void PrimitiveRenderer::drawLine(float x0, float y0, float x1, float y1) {
@@ -103,7 +151,7 @@ void PrimitiveRenderer::drawLine(float x0, float y0, float x1, float y1) {
 }
 
 void PrimitiveRenderer::clearScreen() {
-  _window->clear(_color);
+  _rt->clear(_color);
 }
 
 
