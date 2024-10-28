@@ -99,10 +99,13 @@ void Engine::update()
 
 void Engine::render()
 {
-    Point2D point(80.0f, 80.0f);
-    primitiveRenderer->clearScreen(Color::Black);
-    primitiveRenderer->drawCircle(20.0f, 20.0f, 30.0f, Color::Magenta);
-    point.draw(primitiveRenderer);
+    primitiveRenderer->setColor(Color::Black);
+    primitiveRenderer->clearScreen();
+    primitiveRenderer->setColor(Color::Magenta);
+    primitiveRenderer->drawCircle(20.0f, 20.0f, 30.0f);
+    primitiveRenderer->setPixel(80.0f, 80.0f);
+    //Point2D point(80.0f, 80.0f);
+    //point.draw(primitiveRenderer);
     window->display();
 }
 
