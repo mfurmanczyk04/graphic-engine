@@ -102,10 +102,14 @@ void Engine::render()
     primitiveRenderer->setColor(Color::Black);
     primitiveRenderer->clearScreen();
     primitiveRenderer->setColor(Color::Magenta);
-    primitiveRenderer->drawCircle(20.0f, 20.0f, 30.0f);
-    primitiveRenderer->setPixel(80.0f, 80.0f);
-    //Point2D point(80.0f, 80.0f);
-    //point.draw(primitiveRenderer);
+    primitiveRenderer->drawCircleBuiltin(20.0f, 20.0f, 30.0f);
+
+    //primitiveRenderer->drawLineBuiltin(800.0f, 600.0f, 700.0f, 500.0f);
+    primitiveRenderer->drawLine(800.0f, 600.0f, 700.0f, 500.0f);
+
+    Vector2D pointPos(80.0f, 80.0f);
+    Point2D point(pointPos);
+    point.draw(primitiveRenderer);
     window->display();
 }
 

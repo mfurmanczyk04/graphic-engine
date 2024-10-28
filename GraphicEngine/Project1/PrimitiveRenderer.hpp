@@ -5,14 +5,15 @@
 #include <SFML/Graphics.hpp>
 
 #include "Color.hpp"
-#include "Point2D.hpp"
+#include "Vector2D.hpp"
 
 class PrimitiveRenderer {
 public:
   PrimitiveRenderer(sf::RenderWindow *window) : _window(window) {};
-  void drawCircle(float x, float y, float radius);
-  void drawLine(float x1, float y1, float x2, float y2);
-  void drawVerts(std::vector<Point2D> verts);
+  void drawCircleBuiltin(float x, float y, float radius);
+  void drawLineBuiltin(float x0, float y0, float x1, float y1);
+  void drawLine(float x0, float y0, float x1, float y1);
+  void drawVerts(std::vector<Vector2D> verts);
   void clearScreen();
   void setPixel(float x, float y);
   void setColor(Color color);

@@ -3,14 +3,14 @@
 #define LINESEGMENT_HPP
 
 #include "IDrawable.hpp"
-#include "Point2D.hpp"
+#include "Vector2D.hpp"
 class LineSegment : public IDrawable {
 public:
-  LineSegment(Point2D *start, Point2D *end);
+  LineSegment(Vector2D *start, Vector2D *end);
   void draw(PrimitiveRenderer *renderer) override;
 
 private:
-  Point2D *_start;
-  Point2D *_end;
+  Vector2D *_start;
+  Vector2D *_end;
 };
 #endif

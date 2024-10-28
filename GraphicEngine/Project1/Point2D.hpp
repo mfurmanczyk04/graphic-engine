@@ -1,18 +1,18 @@
-// Point2D.hpp
 #ifndef POINT2D_HPP
 #define POINT2D_HPP
 
-class Point2D {
+#include "IDrawable.hpp"
+#include "PrimitiveRenderer.hpp"
+#include "Vector2D.hpp"
+
+class Point2D : public IDrawable {
 public:
-  Point2D(float x, float y) : _x(x), _y(y) {}
-
-  float getX() { return _x; }
-  void setX(float x) { _x = x;}
-
-  float getY() { return _y; }
-  void setY(float y) { _y = y;}
+  Vector2D getPosition();
+  void setPosition(Vector2D position);
+  void draw(PrimitiveRenderer *renderer) override;
+  Point2D(Vector2D position);
 private:
-  float _x;
-  float _y;
+  Vector2D _position;
 };
+
 #endif
