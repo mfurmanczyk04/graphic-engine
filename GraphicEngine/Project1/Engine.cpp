@@ -102,7 +102,7 @@ void Engine::render()
     primitiveRenderer->setColor(Color::Black);
     primitiveRenderer->clearScreen();
     primitiveRenderer->setColor(Color::Magenta);
-    primitiveRenderer->drawCircleBuiltin(20.0f, 20.0f, 30.0f);
+    primitiveRenderer->drawCircle(20.0f, 20.0f, 30.0f);
 
     //primitiveRenderer->drawLineBuiltin(800.0f, 600.0f, 700.0f, 500.0f);
     primitiveRenderer->drawLine(800.0f, 600.0f, 700.0f, 500.0f);

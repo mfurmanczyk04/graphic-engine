@@ -11,6 +11,8 @@ class PrimitiveRenderer {
 public:
   PrimitiveRenderer(sf::RenderWindow *window) : _window(window) {};
   void drawCircleBuiltin(float x, float y, float radius);
+  void drawCircle(float x, float y, float radius);
+  void drawEllipsis(float x, float y, float rx, float ry);
   void drawLineBuiltin(float x0, float y0, float x1, float y1);
   void drawLine(float x0, float y0, float x1, float y1);
   void drawVerts(std::vector<Vector2D> verts);
