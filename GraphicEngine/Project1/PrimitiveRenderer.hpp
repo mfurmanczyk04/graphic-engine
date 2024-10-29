@@ -14,8 +14,8 @@ public:
   void drawCircle(float x, float y, float radius);
   void drawEllipsis(float x, float y, float rx, float ry);
   void drawLineBuiltin(float x0, float y0, float x1, float y1);
-  void drawLine(float x0, float y0, float x1, float y1);
-  void drawVerts(std::vector<Vector2D> verts);
+  void drawLine(float x0, float y0ver, float x1, float y1);
+  void drawPoly(std::vector<Vector2D> verts);
   void clearScreen();
   void setPixel(float x, float y);
   void setColor(Color color);

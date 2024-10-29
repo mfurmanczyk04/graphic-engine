@@ -2,6 +2,7 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 #include <vector>
 
 
@@ -80,6 +81,8 @@ void PrimitiveRenderer::drawCircle(float x, float y, float radius) {
     Vector2D point(radius*std::cos(alpha), radius*std::sin(alpha));
     circlePoints.push_back(point);
   }
+  
+
   for (Vector2D point : circlePoints) {
     setPixel(point.getX()+x,point.getY()+y);
     setPixel(-point.getX()+x,point.getY()+y);
@@ -114,39 +117,39 @@ void PrimitiveRenderer::drawLineBuiltin(float x0, float y0, float x1, float y1) 
   _rt->draw(lineVerts, 2, sf::Lines);
 }
 
+void PrimitiveRenderer::drawPoly(std::vector<Vector2D> verts) {
+  if (verts.size() < 2)  return;
+  for(int i = 0; i <= verts.size() - 2; i++) {
+    auto x0 = verts[i].getX();
+    auto y0 = verts[i].getY();
+    auto x1 = verts[i+1].getX();
+    auto y1 = verts[i+1].getY();
+    std::cout << "Drawing (" << x0 << ',' << y0 <<"), ("<<x1<<","<<y1<<")\n";
+    drawLine(x0,y0,x1,y1);
+  }
+}
+
+
 void PrimitiveRenderer::drawLine(float x0, float y0, float x1, float y1) {
   float deltaX = x1 - x0;
   float deltaY = y1 - y0;
   float m = deltaY / deltaX;
-  float sx, sy, ex, ey;
-  if (deltaX > 0) {
-    sx = x0;
-    ex = x1;
-  } else { //deltaX < 0
-    sx = x1; // sx = 700
-    ex = x0; // ex = 800
-  }
-  if (deltaY > 0) {
-    sy = y0;
-    ey = y1;
-  } else {
-    sy = y1;
-    ey = y0;
-  }
-
   if(std::abs(m) <= 1) {
-    float nY = sy;
-    for(float x = sx; x <= ex; x+=1) {
+    float nY = y0;
+    for(float x = x0; x <= x1; x+=1) {
       setPixel(std::round(x),std::round(nY));
       nY += m;
     }
+    std::cout << "Drawing m <= 1 (normal)" << '\n';
   }
   else {
-    float nX = sx;
-    for(float y = sy; y <= ey; y+=1) {
+    m = deltaX / deltaY;
+    float nX = x0;
+    for(float y = y0; y <= y1; y+=1) {
       setPixel(std::round(nX), std::round(y));
       nX += m;
     }
+    std::cout << "Drawing m > 1 (not normal)" << '\n';
   }
 }
 

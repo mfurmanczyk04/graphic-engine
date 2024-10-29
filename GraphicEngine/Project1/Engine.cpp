@@ -109,15 +109,24 @@ void Engine::render()
     primitiveRenderer->setColor(Color::Magenta);
 
     primitiveRenderer->drawCircle(200.0f, 200.0f, 30.0f);
+    primitiveRenderer->drawEllipsis(400.0f, 400.0f, 30.0f, 60.0f);
     //primitiveRenderer->boundryFill(200, 200, Color::Magenta, Color::Black);
-
     //primitiveRenderer->drawLineBuiltin(800.0f, 600.0f, 700.0f, 500.0f);
+
     primitiveRenderer->drawLine(800.0f, 600.0f, 700.0f, 500.0f);
+
+    std::vector<Vector2D> polyVerts;
+    polyVerts.push_back(Vector2D(0,0));
+    polyVerts.push_back(Vector2D(10,20));
+    polyVerts.push_back(Vector2D(80,90));
+    polyVerts.push_back(Vector2D(200,300));
+    polyVerts.push_back(Vector2D(400,500));
+
+    primitiveRenderer->drawPoly(polyVerts);
 
     Vector2D pointPos(80.0f, 80.0f);
     Point2D point(pointPos);
     point.draw(primitiveRenderer);
-
 
     renderTexture.display();
     windowSprite.setTexture(renderTexture.getTexture());
