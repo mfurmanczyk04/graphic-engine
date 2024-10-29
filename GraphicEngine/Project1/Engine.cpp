@@ -122,7 +122,7 @@ void Engine::render()
     polyVerts.push_back(Vector2D(200,300));
     polyVerts.push_back(Vector2D(400,500));
 
-    primitiveRenderer->drawPoly(polyVerts);
+    primitiveRenderer->drawPolyLine(polyVerts);
 
     Vector2D pointPos(80.0f, 80.0f);
     Point2D point(pointPos);

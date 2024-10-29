@@ -117,7 +117,7 @@ void PrimitiveRenderer::drawLineBuiltin(float x0, float y0, float x1, float y1) 
   _rt->draw(lineVerts, 2, sf::Lines);
 }
 
-void PrimitiveRenderer::drawPoly(std::vector<Vector2D> verts) {
+void PrimitiveRenderer::drawPolyLine(std::vector<Vector2D> verts) {
   if (verts.size() < 2)  return;
   for(int i = 0; i <= verts.size() - 2; i++) {
     auto x0 = verts[i].getX();
