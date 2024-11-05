@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <vector>
+#include <algorithm>
 
 
 sf::Color sfColorFromColor(Color color) {
@@ -33,6 +34,7 @@ struct ScreenPixel {
 };
 
 
+/*
 void PrimitiveRenderer::boundryFill(unsigned int x, unsigned int y, Color fillColor, Color backgroundColor, bool moore) {
   sf::Sprite outputSprite;
   sf::Texture outputTexture;
@@ -78,6 +80,37 @@ void PrimitiveRenderer::boundryFill(unsigned int x, unsigned int y, Color fillCo
   outputSprite.setTexture(outputTexture);
   _rt->draw(outputSprite);
 }
+*/
+
+
+std::vector<Vector2D> PrimitiveRenderer::boundryFill(const std::vector<Vector2D> &circVerts, Vector2D origin) {
+  std::vector<Vector2D> stack;
+  std::vector<Vector2D> drawnStack;
+  stack.push_back(origin);
+  while (!stack.empty()) {
+    Vector2D p = stack.back();
+    stack.pop_back();
+
+    bool collided = false;
+    for (auto circP : circVerts) {
+      if (p.getX() == circP.getX() && p.getY() == circP.getY()) {
+        drawnStack.push_back(p);
+        collided = true;
+        break;
+      }
+    }
+    if (collided) {
+      continue;
+    }
+  
+    stack.push_back(Vector2D(p.getX(), p.getY()-1));
+    stack.push_back(Vector2D(p.getX(), p.getY()+1));
+    stack.push_back(Vector2D(p.getX()-1, p.getY()));
+    stack.push_back(Vector2D(p.getX()+1, p.getY()));
+  }
+  
+  return drawnStack;
+}
 
 void PrimitiveRenderer::drawCircle(float x, float y, float radius) {
   std::vector<Vector2D> circlePoints;
@@ -108,6 +141,12 @@ void PrimitiveRenderer::setPixel(float x, float y) {
   sf::Vertex vert = sf::Vertex(sf::Vector2(x,y), _color);
   _rt->draw(&vert, 1, sf::Points);
 }
+void PrimitiveRenderer::setPixels(const std::vector<Vector2D> &verts) {
+  for (auto vert : verts) {
+    setPixel(vert.getX(), vert.getY());
+  }
+}
+
 
 void PrimitiveRenderer::setColor(Color color) {
   _color = sfColorFromColor(color);
@@ -135,7 +174,7 @@ void PrimitiveRenderer::drawPolyLine(const std::vector<Vector2D> &verts) {
 
 bool areVertsCrossing(const std::vector<Vector2D> &verts);
 
-void PrimitiveRenderer::drawPoly(std::vector<Vector2D> &verts) {
+void PrimitiveRenderer::drawPoly(std::vector<Vector2D> &verts, bool full) {
   if (verts.size() < 2)  return;
   verts.push_back(verts.front());
   if(areVertsCrossing(verts)) {
@@ -149,6 +188,8 @@ void PrimitiveRenderer::drawPoly(std::vector<Vector2D> &verts) {
     drawLine(x0,y0,x1,y1);
   }
 }
+
+
 
 // Given three collinear points p, q, r, the function checks if 
 // point q lies on line segment 'pr' 
@@ -214,11 +255,12 @@ void PrimitiveRenderer::drawLine(float x0, float y0, float x1, float y1) {
   float sx = std::min(x0, x1);
   float ex = std::max(x0, x1);
 
+  std::vector<Vector2D> pts;
 
   if(std::abs(m) <= 1) {
     float nY = sy;
     for(float x = sx; x <= ex; x+=1) {
-      setPixel(std::round(x),std::round(nY));
+      pts.push_back(Vector2D(std::round(x),std::round(nY)));
       nY += m;
     }
   }
@@ -226,11 +268,18 @@ void PrimitiveRenderer::drawLine(float x0, float y0, float x1, float y1) {
     m = deltaX / deltaY;
     float nX = sx;
     for(float y = sy; y <= ey; y+=1) {
-      setPixel(std::round(nX), std::round(y));
+      pts.push_back(Vector2D(std::round(nX),std::round(y)));
       nX += m;
     }
   }
+  
+  for (auto pt : pts) {
+    setPixel(pt.getX(), pt.getY());
+  }
+
 }
+
+
 
 bool areVertsCrossing(const std::vector<Vector2D> &verts) {
   if(verts.size() <= 3) return false;

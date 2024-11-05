@@ -16,11 +16,13 @@ public:
   void drawLineBuiltin(float x0, float y0, float x1, float y1);
   void drawLine(float x0, float y0, float x1, float y1);
   void drawPolyLine(const std::vector<Vector2D> &verts);
-  void drawPoly(std::vector<Vector2D> &verts);
+  void drawPoly(std::vector<Vector2D> &verts, bool full = false);
   void clearScreen();
   void setPixel(float x, float y);
+  void setPixels(const std::vector<Vector2D> &verts);
   void setColor(Color color);
-  void boundryFill(unsigned int x, unsigned int y, Color fillColor, Color backgroundColor, bool moore = false);
+  std::vector<Vector2D> boundryFill(const std::vector<Vector2D> &circVerts, Vector2D origin);
+
 private:
   sf::RenderTexture *_rt;
   sf::Color _color = sf::Color::White;

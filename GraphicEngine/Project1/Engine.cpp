@@ -121,7 +121,7 @@ void Engine::render()
     polyLineVerts.push_back(Vector2D(10,20));
     polyLineVerts.push_back(Vector2D(80,90));
     polyLineVerts.push_back(Vector2D(200,300));
-    polyLineVerts.push_back(Vector2D(400,500));
+    polyLineVerts.push_back(Vector2D(pressedX,pressedY));
     primitiveRenderer->drawPolyLine(polyLineVerts);
 
     std::vector<Vector2D> polyVerts;
