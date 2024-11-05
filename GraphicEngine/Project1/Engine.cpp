@@ -92,7 +92,8 @@ void Engine::handleEvents()
         }
 
         if (enableMouse && event.type == sf::Event::MouseButtonPressed) {
-            std::cout << "(x,y): " << event.mouseButton.x << ", " << event.mouseButton.y << "\n";
+          pressedX = event.mouseButton.x; 
+          pressedY = event.mouseButton.y;
         }
     }
 }
@@ -106,23 +107,30 @@ void Engine::render()
 {
     primitiveRenderer->setColor(Color::Black);
     primitiveRenderer->clearScreen();
+    primitiveRenderer->setColor(Color::Green);
+    primitiveRenderer->drawCircle(pressedX, pressedY, 30.0f);
     primitiveRenderer->setColor(Color::Magenta);
-
-    primitiveRenderer->drawCircle(200.0f, 200.0f, 30.0f);
     primitiveRenderer->drawEllipsis(400.0f, 400.0f, 30.0f, 60.0f);
-    //primitiveRenderer->boundryFill(200, 200, Color::Magenta, Color::Black);
+    //primitiveRenderer->boundryFill(400.0f, 400.0f, Color::Magenta, Color::Black);
     //primitiveRenderer->drawLineBuiltin(800.0f, 600.0f, 700.0f, 500.0f);
 
     primitiveRenderer->drawLine(800.0f, 600.0f, 700.0f, 500.0f);
 
-    std::vector<Vector2D> polyVerts;
-    polyVerts.push_back(Vector2D(0,0));
-    polyVerts.push_back(Vector2D(10,20));
-    polyVerts.push_back(Vector2D(80,90));
-    polyVerts.push_back(Vector2D(200,300));
-    polyVerts.push_back(Vector2D(400,500));
+    std::vector<Vector2D> polyLineVerts;
+    polyLineVerts.push_back(Vector2D(0,0));
+    polyLineVerts.push_back(Vector2D(10,20));
+    polyLineVerts.push_back(Vector2D(80,90));
+    polyLineVerts.push_back(Vector2D(200,300));
+    polyLineVerts.push_back(Vector2D(400,500));
+    primitiveRenderer->drawPolyLine(polyLineVerts);
 
-    primitiveRenderer->drawPolyLine(polyVerts);
+    std::vector<Vector2D> polyVerts;
+    polyVerts.push_back(Vector2D(40, 40));
+    polyVerts.push_back(Vector2D(80, 40));
+    polyVerts.push_back(Vector2D(80, 80));
+    polyVerts.push_back(Vector2D(40, 80));
+    primitiveRenderer->drawPoly(polyVerts);
+
 
     Vector2D pointPos(80.0f, 80.0f);
     Point2D point(pointPos);

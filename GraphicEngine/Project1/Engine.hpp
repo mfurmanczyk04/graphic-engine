@@ -38,6 +38,8 @@ private:
     bool enableMouse;
     sf::Clock clock;
     PrimitiveRenderer *primitiveRenderer; 
+    float pressedX;
+    float pressedY;
 };
 
 #endif
