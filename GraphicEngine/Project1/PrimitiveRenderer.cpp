@@ -175,6 +175,7 @@ void PrimitiveRenderer::drawPolyLine(const std::vector<Vector2D> &verts) {
 bool areVertsCrossing(const std::vector<Vector2D> &verts);
 
 void PrimitiveRenderer::drawPoly(std::vector<Vector2D> &verts, bool full) {
+  std::vector<Vector2D> pix;
   if (verts.size() < 2)  return;
   verts.push_back(verts.front());
   if(areVertsCrossing(verts)) {
@@ -185,7 +186,16 @@ void PrimitiveRenderer::drawPoly(std::vector<Vector2D> &verts, bool full) {
     auto y0 = verts[i].getY();
     auto x1 = verts[i+1].getX();
     auto y1 = verts[i+1].getY();
-    drawLine(x0,y0,x1,y1);
+    
+    for (auto vert : drawLine(x0,y0,x1,y1)) {
+      pix.push_back(vert);
+    }
+    if(full) {
+      auto draw = boundryFill(pix, Vector2D::Zero);
+      for (auto p : draw) {
+        setPixel(p.getX(), p.getY());
+      }
+    }
   }
 }
 
@@ -245,40 +255,55 @@ bool doIntersect(Vector2D p1, Vector2D q1, Vector2D p2, Vector2D q2)
 } 
 
 
-void PrimitiveRenderer::drawLine(float x0, float y0, float x1, float y1) {
-  float deltaX = x1 - x0; // 600 - 700 = -100
-  float deltaY = y1 - y0; // 
-  float m = deltaY / deltaX;
+std::vector<Vector2D> PrimitiveRenderer::drawLine(float x0, float y0, float x1, float y1) {
+    float deltaX = x1 - x0;
+    float deltaY = y1 - y0;
+    std::vector<Vector2D> pts;
+    // Check if the line is vertical
+    if (deltaX == 0) {
+        setColor(Color::Magenta); // Magenta
+        float sy = std::min(y0, y1);
+        float ey = std::max(y0, y1);
+        for (float y = sy; y <= ey; y += 1) {
+            pts.push_back(Vector2D(std::round(x0), std::round(y)));
+        }
+    } 
+    else {
+        float m = deltaY / deltaX;
 
-  float sy = std::min(y0, y1);
-  float ey = std::max(y0, y1);
-  float sx = std::min(x0, x1);
-  float ex = std::max(x0, x1);
+        // Low slope case
+        if (std::abs(m) <= 1) {
+            float sy = std::min(y0, y1);
+            float sx = std::min(x0, x1);
+            float ex = std::max(x0, x1);
+            float nY = y0 + m * (sx - x0);
 
-  std::vector<Vector2D> pts;
+            for (float x = sx; x <= ex; x += 1) {
+                pts.push_back(Vector2D(std::round(x), std::round(nY)));
+                nY += m;
+            }
+        } 
+        else {
+            m = deltaX / deltaY;
+            float sy = std::min(y0, y1);
+            float ey = std::max(y0, y1);
+            float nX = x0 + (sy - y0) * m;
 
-  if(std::abs(m) <= 1) {
-    float nY = sy;
-    for(float x = sx; x <= ex; x+=1) {
-      pts.push_back(Vector2D(std::round(x),std::round(nY)));
-      nY += m;
+            for (float y = sy; y <= ey; y += 1) {
+                pts.push_back(Vector2D(std::round(nX), std::round(y)));
+                nX += m;
+            }
+        }
     }
-  }
-  else {
-    m = deltaX / deltaY;
-    float nX = sx;
-    for(float y = sy; y <= ey; y+=1) {
-      pts.push_back(Vector2D(std::round(nX),std::round(y)));
-      nX += m;
+
+    // Render points
+    for (auto pt : pts) {
+        setPixel(pt.getX(), pt.getY());
     }
-  }
-  
-  for (auto pt : pts) {
-    setPixel(pt.getX(), pt.getY());
-  }
+
+    return pts;
 
 }
-
 
 
 bool areVertsCrossing(const std::vector<Vector2D> &verts) {

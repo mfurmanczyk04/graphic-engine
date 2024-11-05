@@ -9,6 +9,8 @@ public:
   float getX() const { return _x; }
   void setX(float x) { _x = x;}
 
+  static const Vector2D Zero;
+
   float getY() const { return _y; }
   void setY(float y) { _y = y;}
 private:

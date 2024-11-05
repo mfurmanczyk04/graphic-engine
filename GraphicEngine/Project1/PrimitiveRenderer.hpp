@@ -14,7 +14,7 @@ public:
   void drawCircle(float x, float y, float radius);
   void drawEllipsis(float x, float y, float rx, float ry);
   void drawLineBuiltin(float x0, float y0, float x1, float y1);
-  void drawLine(float x0, float y0, float x1, float y1);
+  std::vector<Vector2D> drawLine(float x0, float y0, float x1, float y1);
   void drawPolyLine(const std::vector<Vector2D> &verts);
   void drawPoly(std::vector<Vector2D> &verts, bool full = false);
   void clearScreen();

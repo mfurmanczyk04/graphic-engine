@@ -129,7 +129,7 @@ void Engine::render()
     polyVerts.push_back(Vector2D(80, 40));
     polyVerts.push_back(Vector2D(80, 80));
     polyVerts.push_back(Vector2D(40, 80));
-    primitiveRenderer->drawPoly(polyVerts);
+    primitiveRenderer->drawPoly(polyVerts, false);
 
 
     Vector2D pointPos(80.0f, 80.0f);
