@@ -43,7 +43,6 @@ void Engine::setGraphicsMode(bool fullscreen, sf::VideoMode videoMode)
     isFullscreen = fullscreen;
     if (window) {
         delete window;
-        delete primitiveRenderer;
         window = new sf::RenderWindow(videoMode, "SFML Engine", isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
         auto size = window->getSize();
         renderTexture.create(size.x,size.y);
@@ -112,6 +111,12 @@ void Engine::render()
   point.draw(primitiveRenderer);
 
   primitiveRenderer->drawCircle(pressedX, pressedY, 30.0f, sf::Color::Magenta);
+
+  primitiveRenderer->drawPolyLine({
+    {0.0, 0.0}, {20.0, 20.0}, {pressedX, pressedY}
+  }, sf::Color::Green);
+
+  primitiveRenderer->drawRect(80, 80, 20, 20, sf::Color::Blue, sf::Color::Red);
   sf::Texture updatedTexture;
   updatedTexture.loadFromImage(screenshot);
   sf::Sprite updatedSprite(updatedTexture);
@@ -119,7 +124,7 @@ void Engine::render()
   renderTexture.display();
 
   // draw final renderTexture;
-  windowSprite.setTexture(renderTexture.getTexture());
+  sf::Sprite windowSprite(renderTexture.getTexture());
   window->clear();
   window->draw(windowSprite);
   window->display();

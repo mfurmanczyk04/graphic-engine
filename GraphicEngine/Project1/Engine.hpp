@@ -21,7 +21,7 @@ public:
 
 private:
     // Metody prywatne
-    void handleEvents(); // Obs³uga zdarzeñ
+    void handleEvents(); 
     void update(); // Aktualizacja logiki gry
     void render();
     void clearScreen(const sf::Color& color);
@@ -31,7 +31,6 @@ private:
 
     sf::RenderWindow* window;
     sf::RenderTexture renderTexture;
-    sf::Sprite windowSprite;
     bool isFullscreen;
     int frameRate;
     bool enableKeyboard;

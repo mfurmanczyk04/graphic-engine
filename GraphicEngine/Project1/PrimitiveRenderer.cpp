@@ -2,6 +2,7 @@
 #include "ScreenPoint2D.hpp"
 #include "Vector2D.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include <cmath>
 #include <cstdlib>
 #include <stack>
@@ -16,7 +17,7 @@ void PrimitiveRenderer::setImage(sf::Image *image) {
   _output = image;
 }
 
-void PrimitiveRenderer::drawEllipsis(int x, int y, int rx, int ry, sf::Color color) {
+void PrimitiveRenderer::drawEllipsis(float x, float y, float rx, float ry, sf::Color color, sf::Color fill) {
   std::vector<Vector2D> ellipsisPoints;
   for (float alpha = 0.0f; alpha <= PI/2; alpha += CIRCLE_STEP)  {
     Vector2D point(rx*std::cos(alpha), ry*std::sin(alpha));
@@ -29,6 +30,9 @@ void PrimitiveRenderer::drawEllipsis(int x, int y, int rx, int ry, sf::Color col
     setPixel(+point.x+x, -point.y+y, color);
     setPixel(-point.x+x, -point.y+y, color);
   }
+  if(fill.toInteger() > 0) {
+    boundaryFill(x,y,color,fill);
+  }
 }
 
 struct ScreenPixel {
@@ -38,7 +42,17 @@ struct ScreenPixel {
 };
 
 
-void PrimitiveRenderer::drawCircle(float x, float y, float radius, sf::Color color) {
+void PrimitiveRenderer::drawRect(float x, float y, float w, float h, sf::Color color, sf::Color fill) {
+  drawLine(x,y,x+w,y,color);
+  drawLine(x+w,y,x+w,y+w,color);
+  drawLine(x+w,y+w,x,y+w,color);
+  drawLine(x,y+w,x,y,color);
+  if (fill.toInteger() > 0) {
+    boundaryFill(x+1,y+1,color,fill);
+  }
+}
+
+void PrimitiveRenderer::drawCircle(float x, float y, float radius, sf::Color color, sf::Color fill) {
   std::vector<Vector2D> circlePoints;
   for (float alpha = 0.0f; alpha <= PI/2; alpha += CIRCLE_STEP)  {
     Vector2D point(radius*std::cos(alpha), radius*std::sin(alpha));
@@ -50,15 +64,21 @@ void PrimitiveRenderer::drawCircle(float x, float y, float radius, sf::Color col
     setPixel(point.x+x,-point.y+y ,color);
     setPixel(-point.x+x,-point.y+y,color);
   }
+  if(fill.toInteger() > 0) {
+    boundaryFill(x,y,color,fill);
+  }
 }
 
 
+
+bool PrimitiveRenderer::isPixelInBounds(int x, int y) {
+  return x >= 0 && y >= 0 && x < _output->getSize().x && y < _output->getSize().y;
+}
+
 void PrimitiveRenderer::setPixel(int x, int y, sf::Color color) {
-  auto size = _output->getSize();
-  if(x < 0 || y < 0 || x > size.x || y > size.y) {
-    return;
+  if(isPixelInBounds(x, y)) {
+    _output->setPixel(x, y, color);
   }
-  _output->setPixel(x, y, color);
 }
 
 void PrimitiveRenderer::setPixels(const std::vector<Vector2D> &verts, sf::Color color) {
@@ -66,7 +86,6 @@ void PrimitiveRenderer::setPixels(const std::vector<Vector2D> &verts, sf::Color 
     setPixel(vert.x, vert.y, color);
   }
 }
-
 
 void PrimitiveRenderer::drawPolyLine(const std::vector<Vector2D> &verts, sf::Color color) {
   if (verts.size() < 2)  return;
@@ -79,37 +98,41 @@ void PrimitiveRenderer::drawPolyLine(const std::vector<Vector2D> &verts, sf::Col
   }
 }
 
-struct ScreenPoint {
-  int x;
-  int y;
-  sf::Color color;
-};
 
-void PrimitiveRenderer::boundaryFill(int x, int y, sf::Color fillColor, sf::Color boundaryColor) {
-  std::stack<ScreenPoint> stack;
-  ScreenPoint origin{x, y, _output->getPixel(x, y)};
-  stack.push(origin);
-  while (!stack.empty()) {
-    ScreenPoint p = stack.top();
-    stack.pop();
-    if (p.color == fillColor) {
-       return;
+
+void PrimitiveRenderer::boundaryFill(int x, int y, sf::Color boundaryColor, sf::Color fillColor) {
+    if (!_output || !isPixelInBounds(x, y)) return;
+
+    std::stack<ScreenPoint2D> stack;
+    stack.push({x, y});
+    
+    while (!stack.empty()) {
+        ScreenPoint2D p = stack.top();
+        stack.pop();
+
+        // Check bounds for current pixel coordinates
+        if (!isPixelInBounds(p.x, p.y)) continue;
+
+        // Get color of the current pixel from _output image
+        sf::Color color = _output->getPixel(p.x, p.y);
+        // Skip if the pixel is already the fill color or if it's a boundary color
+        if (color == fillColor || color == boundaryColor) continue;
+        // Fill the pixel with the fill color
+        setPixel(p.x, p.y, fillColor);
+
+        // Push neighboring pixels onto the stack for further processing
+        stack.push({p.x, p.y - 1});
+        stack.push({p.x, p.y + 1});
+        stack.push({p.x - 1, p.y});
+        stack.push({p.x + 1, p.y});
     }
-    if (p.color == boundaryColor) {
-      p.color = fillColor;
-      setPixel(p.x, p.y, fillColor);
-
-    }
-  }
-
-
 }
 
 
 
 bool areVertsCrossing(const std::vector<Vector2D> &verts);
 
-void PrimitiveRenderer::drawPoly(std::vector<Vector2D> &verts,sf::Color color, bool full) {
+void PrimitiveRenderer::drawPoly(std::vector<Vector2D> &verts,sf::Color color, sf::Color fill) {
   std::vector<ScreenPoint2D> pix;
   if (verts.size() < 2)  return;
   verts.push_back(verts.front());
@@ -122,6 +145,16 @@ void PrimitiveRenderer::drawPoly(std::vector<Vector2D> &verts,sf::Color color, b
     auto x1 = verts[i+1].x;
     auto y1 = verts[i+1].y;
     drawLine(x0,y0,x1,y1, color);
+  }
+  if(fill.toInteger() > 0) {
+    Vector2D avg(0.0, 0.0);
+    for (auto v : verts) {
+      avg.x += v.x;
+      avg.y += v.y;
+    }
+    avg.x /= verts.size();
+    avg.y /= verts.size();
+    boundaryFill(avg.x,avg.y,color,fill);
   }
 }
 
@@ -171,39 +204,39 @@ bool doIntersect(Vector2D p1, Vector2D q1, Vector2D p2, Vector2D q2)
 } 
 
 
-void PrimitiveRenderer::drawLine(int x0, int y0, int x1, int y1, sf::Color color) {
-    int deltaX = x1 - x0;
-    int deltaY = y1 - y0;
+void PrimitiveRenderer::drawLine(float x0, float y0, float x1, float y1, sf::Color color) {
+    float deltaX = x1 - x0;
+    float deltaY = y1 - y0;
     // Check if the line is vertical
     if (deltaX == 0) {
-        int sy = std::min(y0, y1);
-        int ey = std::max(y0, y1);
-        for (int y = sy; y <= ey; y += 1) {
+        float sy = std::min(y0, y1);
+        float ey = std::max(y0, y1);
+        for (float y = sy; y <= ey; y += 1) {
             setPixel(std::round(x0), std::round(y), color);
         }
     } 
     else {
-        int m = deltaY / deltaX;
+        float m = deltaY / deltaX;
 
         // Low slope case
         if (std::abs(m) <= 1) {
-            int sy = std::min(y0, y1);
-            int sx = std::min(x0, x1);
-            int ex = std::max(x0, x1);
-            int nY = y0 + m * (sx - x0);
+            float sy = std::min(y0, y1);
+            float sx = std::min(x0, x1);
+            float ex = std::max(x0, x1);
+            float nY = y0 + m * (sx - x0);
 
-            for (int x = sx; x <= ex; x += 1) {
+            for (float x = sx; x <= ex; x += 1) {
                 setPixel(std::round(x), std::round(nY), color);
                 nY += m;
             }
         } 
         else {
             m = deltaX / deltaY;
-            int sy = std::min(y0, y1);
-            int ey = std::max(y0, y1);
-            int nX = x0 + (sy - y0) * m;
+            float sy = std::min(y0, y1);
+            float ey = std::max(y0, y1);
+            float nX = x0 + (sy - y0) * m;
 
-            for (int y = sy; y <= ey; y += 1) {
+            for (float y = sy; y <= ey; y += 1) {
                 setPixel(std::round(nX), std::round(y), color);
                 nX += m;
             }
