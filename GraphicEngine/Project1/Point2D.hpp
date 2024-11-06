@@ -10,9 +10,10 @@ public:
   Vector2D getPosition();
   void setPosition(Vector2D position);
   void draw(PrimitiveRenderer *renderer) override;
-  Point2D(Vector2D position);
+  Point2D(Vector2D position, sf::Color color);
 private:
   Vector2D _position;
+  sf::Color _color;
 };
 
 #endif

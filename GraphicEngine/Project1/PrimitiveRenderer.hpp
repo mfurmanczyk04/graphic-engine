@@ -4,27 +4,21 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Color.hpp"
 #include "Vector2D.hpp"
 
 class PrimitiveRenderer {
 public:
-  PrimitiveRenderer(sf::RenderTexture *renderTexture) : _rt(renderTexture) {};
-  void drawCircleBuiltin(float x, float y, float radius);
-  void drawCircle(float x, float y, float radius);
-  void drawEllipsis(float x, float y, float rx, float ry);
-  void drawLineBuiltin(float x0, float y0, float x1, float y1);
-  std::vector<Vector2D> drawLine(float x0, float y0, float x1, float y1);
-  void drawPolyLine(const std::vector<Vector2D> &verts);
-  void drawPoly(std::vector<Vector2D> &verts, bool full = false);
+  void drawCircle(float x, float y, float radius, sf::Color color);
+  void drawEllipsis(int x, int y, int rx, int ry, sf::Color color);
+  void drawLine(int x0, int y0, int x1, int y1, sf::Color color);
+  void drawPolyLine(const std::vector<Vector2D> &verts, sf::Color color);
+  void drawPoly(std::vector<Vector2D> &verts, sf::Color color, bool full = false);
   void clearScreen();
-  void setPixel(float x, float y);
-  void setPixels(const std::vector<Vector2D> &verts);
-  void setColor(Color color);
-  std::vector<Vector2D> boundryFill(const std::vector<Vector2D> &circVerts, Vector2D origin);
-
+  void setPixel(int x, int y, sf::Color color);
+  void setPixels(const std::vector<Vector2D> &verts, sf::Color color);
+  void boundaryFill(int x, int y, sf::Color fillColor, sf::Color boundaryColor);
+  void setImage(sf::Image *image);
 private:
-  sf::RenderTexture *_rt;
-  sf::Color _color = sf::Color::White;
+  sf::Image *_output = nullptr;
 };
 #endif

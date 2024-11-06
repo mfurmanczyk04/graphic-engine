@@ -1,7 +1,6 @@
 // Engine.cpp
 #include "Engine.hpp"
 
-#include "Color.hpp"
 #include "Point2D.hpp"
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <iostream>
@@ -29,7 +28,7 @@ bool Engine::init()
         window->setFramerateLimit(frameRate);
         auto size = window->getSize();
         renderTexture.create(size.x,size.y);
-        primitiveRenderer = new PrimitiveRenderer(&renderTexture);
+        primitiveRenderer = new PrimitiveRenderer();
         std::cout << "SFML loaded succesfully.\n";
         return true;
     }
@@ -48,7 +47,6 @@ void Engine::setGraphicsMode(bool fullscreen, sf::VideoMode videoMode)
         window = new sf::RenderWindow(videoMode, "SFML Engine", isFullscreen ? sf::Style::Fullscreen : sf::Style::Default);
         auto size = window->getSize();
         renderTexture.create(size.x,size.y);
-        primitiveRenderer = new PrimitiveRenderer(&renderTexture);
     }
 }
 
@@ -105,42 +103,26 @@ void Engine::update()
 
 void Engine::render()
 {
-    primitiveRenderer->setColor(Color::Black);
-    primitiveRenderer->clearScreen();
-    primitiveRenderer->setColor(Color::Green);
-    primitiveRenderer->drawCircle(pressedX, pressedY, 30.0f);
-    primitiveRenderer->setColor(Color::Magenta);
-    primitiveRenderer->drawEllipsis(400.0f, 400.0f, 30.0f, 60.0f);
-    //primitiveRenderer->boundryFill(400.0f, 400.0f, Color::Magenta, Color::Black);
-    //primitiveRenderer->drawLineBuiltin(800.0f, 600.0f, 700.0f, 500.0f);
+  renderTexture.clear();
+  renderTexture.display();
+  sf::Image screenshot = renderTexture.getTexture().copyToImage();
+  primitiveRenderer->setImage(&screenshot);
 
-    primitiveRenderer->drawLine(800.0f, 600.0f, 700.0f, 500.0f);
+  Point2D point(Vector2D(80.0f, 80.0f), sf::Color::Red);
+  point.draw(primitiveRenderer);
 
-    std::vector<Vector2D> polyLineVerts;
-    polyLineVerts.push_back(Vector2D(0,0));
-    polyLineVerts.push_back(Vector2D(10,20));
-    polyLineVerts.push_back(Vector2D(80,90));
-    polyLineVerts.push_back(Vector2D(200,300));
-    polyLineVerts.push_back(Vector2D(pressedX,pressedY));
-    primitiveRenderer->drawPolyLine(polyLineVerts);
+  primitiveRenderer->drawCircle(pressedX, pressedY, 30.0f, sf::Color::Magenta);
+  sf::Texture updatedTexture;
+  updatedTexture.loadFromImage(screenshot);
+  sf::Sprite updatedSprite(updatedTexture);
+  renderTexture.draw(updatedSprite);
+  renderTexture.display();
 
-    std::vector<Vector2D> polyVerts;
-    polyVerts.push_back(Vector2D(40, 40));
-    polyVerts.push_back(Vector2D(80, 40));
-    polyVerts.push_back(Vector2D(80, 80));
-    polyVerts.push_back(Vector2D(40, 80));
-    primitiveRenderer->drawPoly(polyVerts, false);
-
-
-    Vector2D pointPos(80.0f, 80.0f);
-    Point2D point(pointPos);
-    point.draw(primitiveRenderer);
-
-    renderTexture.display();
-    windowSprite.setTexture(renderTexture.getTexture());
-    window->clear();
-    window->draw(windowSprite);
-    window->display();
+  // draw final renderTexture;
+  windowSprite.setTexture(renderTexture.getTexture());
+  window->clear();
+  window->draw(windowSprite);
+  window->display();
 }
 
 void Engine::clearScreen(const sf::Color& color)
