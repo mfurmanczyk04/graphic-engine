@@ -1,9 +1,16 @@
 // Engine.cpp
 #include "Engine.hpp"
 
+#include "LineSegment.hpp"
 #include "Point2D.hpp"
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <iostream>
+
+
+
+PrimitiveRenderer * Engine::getPrimitiveRenderer() {
+  return this->primitiveRenderer;
+}
 
 Engine::Engine() :
     window(nullptr),
@@ -100,34 +107,39 @@ void Engine::update()
     sf::Time elapsed = clock.restart();
 }
 
-void Engine::render()
-{
+void Engine::_renderBegin() {
   renderTexture.clear();
   renderTexture.display();
-  sf::Image screenshot = renderTexture.getTexture().copyToImage();
-  primitiveRenderer->setImage(&screenshot);
+  screenBuffer = renderTexture.getTexture().copyToImage();
+  primitiveRenderer->setImage(&screenBuffer);
+}
 
-  Point2D point(Vector2D(80.0f, 80.0f), sf::Color::Red);
-  point.draw(primitiveRenderer);
 
-  primitiveRenderer->drawCircle(pressedX, pressedY, 30.0f, sf::Color::Magenta);
-
-  primitiveRenderer->drawPolyLine({
-    {0.0, 0.0}, {20.0, 20.0}, {pressedX, pressedY}
-  }, sf::Color::Green);
-
-  primitiveRenderer->drawRect(80, 80, 20, 20, sf::Color::Blue, sf::Color::Red);
+void Engine::_renderEnd() {
   sf::Texture updatedTexture;
-  updatedTexture.loadFromImage(screenshot);
+  updatedTexture.loadFromImage(screenBuffer);
   sf::Sprite updatedSprite(updatedTexture);
   renderTexture.draw(updatedSprite);
   renderTexture.display();
-
   // draw final renderTexture;
   sf::Sprite windowSprite(renderTexture.getTexture());
   window->clear();
   window->draw(windowSprite);
   window->display();
+}
+
+void Engine::render()
+{
+  _renderBegin();
+
+  LineSegment myLine({80, 80}, {200, 200}, sf::Color::Red);
+  auto point = myLine.getCenterPoint();
+  myLine.draw(primitiveRenderer);
+  Point2D marker(point, sf::Color::Green);
+  marker.draw(primitiveRenderer);
+  primitiveRenderer->drawRect(80, 80, 20, 20, sf::Color::Blue, sf::Color::Red);
+
+  _renderEnd();
 }
 
 void Engine::clearScreen(const sf::Color& color)

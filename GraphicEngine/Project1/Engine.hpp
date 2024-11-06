@@ -18,12 +18,14 @@ public:
     void setGraphicsMode(bool fullscreen, sf::VideoMode videoMode);
     void setParameters(int frameRate, bool enableKeyboard, bool enableMouse);
     void run(); // G³ówna pêtla gry
-
+    PrimitiveRenderer *getPrimitiveRenderer();
 private:
     // Metody prywatne
     void handleEvents(); 
     void update(); // Aktualizacja logiki gry
     void render();
+    void _renderBegin();
+    void _renderEnd();
     void clearScreen(const sf::Color& color);
     void logError(const std::string& message);
 
@@ -39,6 +41,8 @@ private:
     PrimitiveRenderer *primitiveRenderer; 
     float pressedX;
     float pressedY;
+    sf::Image screenBuffer;
+    float rotation = 0;
 };
 
 #endif
