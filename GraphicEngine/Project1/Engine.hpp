@@ -5,8 +5,10 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 #include "PrimitiveRenderer.hpp"
 #include "InputState.hpp"
+#include "RenderPipeline.hpp"
+#include "Player.hpp"
 
-class Engine
+class Engine : public RenderPipeline
 {
 public:
     // Konstruktor i destruktor
@@ -18,7 +20,7 @@ public:
     void setGraphicsMode(bool fullscreen, sf::VideoMode videoMode);
     void setParameters(int frameRate, bool enableKeyboard, bool enableMouse);
     void run(); // G³ówna pêtla gry
-    PrimitiveRenderer *getPrimitiveRenderer();
+    PrimitiveRenderer *getPrimitiveRenderer() override;
     InputState getInputState();
 private:
     // Metody prywatne
@@ -46,6 +48,10 @@ private:
     float pressedY;
     sf::Image screenBuffer;
     float rotation = 0;
+
+    // temporary 
+    Player player;
+
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "InputState.hpp"
 #include <stdexcept>
 
-bool InputState::isKeyDown(sf::Keyboard::Key key) {
+bool InputState::isKeyDown(sf::Keyboard::Key key) const {
   try {
     return pressedKeys.at(key);
   } catch (std::out_of_range e) {
@@ -9,17 +9,17 @@ bool InputState::isKeyDown(sf::Keyboard::Key key) {
   }
 }
 
-Vector2D InputState::getMousePos() {
+Vector2D InputState::getMousePos() const {
   return mousePos;
 }
 
 // setters - for engine to handle
 void InputState::setKeyDown(sf::Keyboard::Key key) {
-  pressedKeys.insert(std::pair{key, true});
+  pressedKeys[key] = true;
   
 }
 void InputState::setKeyUp(sf::Keyboard::Key key){
-  pressedKeys.insert(std::pair{key, false});
+  pressedKeys[key] = false;
 }
 
 void InputState::setLeftClickDown(){

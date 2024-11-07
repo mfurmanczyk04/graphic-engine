@@ -1,8 +1,6 @@
 // Engine.cpp
 #include "Engine.hpp"
 
-#include "LineSegment.hpp"
-#include "Point2D.hpp"
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <iostream>
 
@@ -111,6 +109,7 @@ void Engine::handleEvents()
 void Engine::update()
 {
   sf::Time elapsed = clock.restart();
+  player.update(inputState);
 }
 
 void Engine::_renderBegin() {
@@ -137,7 +136,9 @@ void Engine::_renderEnd() {
 void Engine::render()
 {
   _renderBegin();
+  player.draw(primitiveRenderer);
 
+  /*
   LineSegment myLine({80, 80}, {200, 200}, sf::Color::Red);
   myLine.rotate(20.0f,myLine.getCenterPoint());
   myLine.draw(primitiveRenderer);
@@ -145,6 +146,7 @@ void Engine::render()
   marker.draw(primitiveRenderer);
   primitiveRenderer->drawRect(80, 80, 20, 20, sf::Color::Blue, sf::Color::Cyan);
   primitiveRenderer->drawCircle(400, 400, 20, sf::Color::Green, sf::Color::White);
+  */
   _renderEnd();
 }
 
