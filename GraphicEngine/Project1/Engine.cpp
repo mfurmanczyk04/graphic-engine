@@ -7,7 +7,6 @@
 #include <iostream>
 
 
-
 PrimitiveRenderer * Engine::getPrimitiveRenderer() {
   return this->primitiveRenderer;
 }
@@ -18,7 +17,8 @@ Engine::Engine() :
     isFullscreen(false),
     frameRate(60),
     enableKeyboard(true),
-    enableMouse(true)
+    enableMouse(true),
+    player({200.0, 200.0})
 {
 }
 
@@ -83,28 +83,34 @@ void Engine::run()
 
 void Engine::handleEvents()
 {
-    sf::Event event;
-    while (window->pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            window->close();
+  sf::Event event;
+  while (window->pollEvent(event))
+  {
+    if (event.type == sf::Event::Closed)
+      window->close();
 
-        if (enableKeyboard && event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Escape) {
-                window->close();
-            }
+    if (enableKeyboard) {
+      if (event.type == sf::Event::KeyPressed) {
+        inputState.setKeyDown(event.key.code);
+        if (event.key.code == sf::Keyboard::Escape) {
+          window->close();
         }
-
-        if (enableMouse && event.type == sf::Event::MouseButtonPressed) {
-          pressedX = event.mouseButton.x; 
-          pressedY = event.mouseButton.y;
-        }
+      }
+      if (event.type == sf::Event::KeyReleased) {
+        inputState.setKeyUp(event.key.code);
+      }
     }
+
+    if (enableMouse && event.type == sf::Event::MouseButtonPressed) {
+      pressedX = event.mouseButton.x; 
+      pressedY = event.mouseButton.y;
+    }
+  }
 }
 
 void Engine::update()
 {
-    sf::Time elapsed = clock.restart();
+  sf::Time elapsed = clock.restart();
 }
 
 void Engine::_renderBegin() {
@@ -133,12 +139,12 @@ void Engine::render()
   _renderBegin();
 
   LineSegment myLine({80, 80}, {200, 200}, sf::Color::Red);
-  auto point = myLine.getCenterPoint();
+  myLine.rotate(20.0f,myLine.getCenterPoint());
   myLine.draw(primitiveRenderer);
-  Point2D marker(point, sf::Color::Green);
+  Point2D marker(myLine.getCenterPoint(), sf::Color::Green);
   marker.draw(primitiveRenderer);
-  primitiveRenderer->drawRect(80, 80, 20, 20, sf::Color::Blue, sf::Color::Red);
-
+  primitiveRenderer->drawRect(80, 80, 20, 20, sf::Color::Blue, sf::Color::Cyan);
+  primitiveRenderer->drawCircle(400, 400, 20, sf::Color::Green, sf::Color::White);
   _renderEnd();
 }
 

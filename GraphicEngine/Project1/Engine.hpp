@@ -1,10 +1,10 @@
-// Engine.hpp
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include "PrimitiveRenderer.hpp"
+#include "InputState.hpp"
 
 class Engine
 {
@@ -19,6 +19,7 @@ public:
     void setParameters(int frameRate, bool enableKeyboard, bool enableMouse);
     void run(); // G³ówna pêtla gry
     PrimitiveRenderer *getPrimitiveRenderer();
+    InputState getInputState();
 private:
     // Metody prywatne
     void handleEvents(); 
@@ -28,8 +29,10 @@ private:
     void _renderEnd();
     void clearScreen(const sf::Color& color);
     void logError(const std::string& message);
-
     void cleanup();
+
+    InputState inputState;
+
 
     sf::RenderWindow* window;
     sf::RenderTexture renderTexture;

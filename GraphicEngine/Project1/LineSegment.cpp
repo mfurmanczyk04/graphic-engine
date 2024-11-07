@@ -44,9 +44,10 @@ void LineSegment::rotate(float deg, Vector2D origin) {
   _end.y = origin.y + endX * sinAngle + endY * cosAngle;
 }
 
-void LineSegment::translate(float x, float y) {
-  _start.x += x;
-  _start.y += y;
-  _end.x += x;
-  _end.y += y;
+
+void LineSegment::translate(Vector2D vec) {
+  _start.x += vec.x;
+  _start.y += vec.y;
+  _end.x += vec.x;
+  _end.y += vec.y;
 }

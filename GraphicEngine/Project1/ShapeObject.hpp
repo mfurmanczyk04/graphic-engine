@@ -1,4 +1,3 @@
-
 #ifndef SHAPEOBJECT_HPP
 #define SHAPEOBJECT_HPP
 #include "DrawableObject.hpp"

@@ -1,9 +1,8 @@
 #ifndef UPDATABLEOBJECT_HPP
 #define UPDATABLEOBJECT_HPP
-#include "Vector2D.hpp"
+#include "InputState.hpp"
 class UpdatableObject {
 public:
-  void update(float deltaTime, Input input) {
-  }
+  virtual void update(const InputState &input) = 0;
 };
 #endif

@@ -13,8 +13,8 @@ public:
   void draw(PrimitiveRenderer *renderer) override;
   void scale(float sx, float sy, Vector2D origin) override;
   void rotate(float deg, Vector2D origin) override;
-  void translate(float x, float y) override;
-  Vector2D getCenterPoint() override;
+  void translate(Vector2D vec)  override;
+  Vector2D getCenterPoint();
 private:
   Vector2D _start;
   Vector2D _end;

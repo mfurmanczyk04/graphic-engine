@@ -6,7 +6,7 @@ int main()
     Engine engine;
 
     if (engine.init()) {
-        engine.setGraphicsMode(false, sf::VideoMode(800, 600));
+        engine.setGraphicsMode(true, sf::VideoMode(2160, 1440));
         engine.setParameters(60, true, true);
         engine.run();
     }

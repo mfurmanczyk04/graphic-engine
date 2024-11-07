@@ -11,10 +11,9 @@ public:
   Vector2D getPosition();
   void setPosition(Vector2D position);
   void draw(PrimitiveRenderer *renderer) override;
+  void translate(Vector2D vec) override;
   void rotate(float deg, Vector2D origin) override;
   void scale(float sx, float sy, Vector2D origin) override;
-  void translate(float x, float y) override;
-  Vector2D getCenterPoint() override;
   Point2D(Vector2D position, sf::Color color);
 private:
   Vector2D _position;
