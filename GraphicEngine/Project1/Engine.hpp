@@ -2,13 +2,14 @@
 #define ENGINE_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include "PrimitiveRenderer.hpp"
 #include "InputState.hpp"
-#include "RenderPipeline.hpp"
+#include "Renderer.hpp"
 #include "Player.hpp"
 
-class Engine : public RenderPipeline
+class Engine : public Renderer
 {
 public:
     // Konstruktor i destruktor
@@ -21,6 +22,7 @@ public:
     void setParameters(int frameRate, bool enableKeyboard, bool enableMouse);
     void run(); // G³ówna pêtla gry
     PrimitiveRenderer *getPrimitiveRenderer() override;
+    sf::RenderTarget *getRenderTarget() override;
     InputState getInputState();
 private:
     // Metody prywatne

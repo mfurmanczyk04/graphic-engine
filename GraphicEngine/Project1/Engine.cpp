@@ -1,12 +1,17 @@
 // Engine.cpp
 #include "Engine.hpp"
 
+#include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <iostream>
 
 
 PrimitiveRenderer * Engine::getPrimitiveRenderer() {
-  return this->primitiveRenderer;
+  return primitiveRenderer;
+}
+
+sf::RenderTarget * Engine::getRenderTarget() {
+  return &renderTexture;
 }
 
 Engine::Engine() :

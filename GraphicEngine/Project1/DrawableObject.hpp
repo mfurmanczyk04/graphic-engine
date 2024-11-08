@@ -2,9 +2,9 @@
 #define DRAWABLEOBJECT_HPP
 
 #include "GameObject.hpp"
-#include "RenderPipeline.hpp"
+#include "Renderer.hpp"
 
 class DrawableObject : public GameObject {
-  virtual void draw(RenderPipeline *rp) = 0;
+  virtual void draw(Renderer *rp) = 0;
 };
 #endif
