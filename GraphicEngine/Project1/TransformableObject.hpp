@@ -7,7 +7,6 @@
 class TransformableObject : public GameObject {
 public:
   virtual void translate(Vector2D vec)  = 0;
-  virtual void setPosition(Vector2D pos)  = 0;
   virtual void rotate(float deg, Vector2D origin) = 0;
   virtual void scale(float sx, float sy, Vector2D origin) = 0;
 };

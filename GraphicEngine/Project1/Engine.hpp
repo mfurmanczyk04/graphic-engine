@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include "BitmapHandler.hpp"
 #include "PrimitiveRenderer.hpp"
 #include "InputState.hpp"
 #include "Renderer.hpp"
@@ -50,9 +51,13 @@ private:
     float pressedY;
     sf::Image screenBuffer;
     float rotation = 0;
+    
+    BitmapHandler bitmapHandler;
+
 
     // temporary 
-    Player player;
+    Player *player;
+
 
 };
 

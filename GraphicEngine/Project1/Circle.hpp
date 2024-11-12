@@ -8,7 +8,7 @@
 class Circle : public ShapeObject, public TransformableObject {
 public:
   void translate(Vector2D vec) override;
-  void setPosition(Vector2D pos) override;
+  void setPosition(Vector2D pos);
   void rotate(float deg, Vector2D origin) override;
   void scale(float sx, float sy, Vector2D origin) override;
   void draw(PrimitiveRenderer *pr) override;
