@@ -10,7 +10,10 @@
 
 class Player : public DrawableObject, public TransformableObject, public UpdatableObject {
 public:
-  Player(Vector2D pos, BitmapHandler *bitmapHandler) :  position(pos.x, pos.y), sprite(pos, *bitmapHandler->getTexture("player")) {}
+  Player(Vector2D pos, BitmapHandler *bitmapHandler) :  
+    position(pos.x, pos.y),
+    sprite(pos, *bitmapHandler->getTexture("player")) 
+  {}
   
   void update(const InputState &input) override {
     Vector2D inputV = Vector2D(0,0);

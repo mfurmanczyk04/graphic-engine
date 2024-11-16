@@ -27,11 +27,14 @@ public:
     InputState getInputState();
 private:
     // Metody prywatne
+    bool loadAssets();
+    bool initializeObjects();
     void handleEvents(); 
     void update(); // Aktualizacja logiki gry
     void render();
-    void _renderBegin();
-    void _renderEnd();
+    void draw();
+    void beginPrimitiveBatch();
+    void endPrimitiveBatch();
     void clearScreen(const sf::Color& color);
     void logError(const std::string& message);
     void cleanup();

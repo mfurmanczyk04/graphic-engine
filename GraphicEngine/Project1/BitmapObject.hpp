@@ -8,11 +8,8 @@
 
 class BitmapObject : public DrawableObject, public TransformableObject {
 public:
-  BitmapObject(Vector2D position, sf::Texture bitmap)
-      :  texture(bitmap) {
-
-      texture.setPosition(position.x, position.y);
-  }
+  BitmapObject(Vector2D position, const sf::Texture &bitmap)
+      :  sprite(bitmap) { sprite.setPosition(position.x, position.y); }
 
   void draw(Renderer *rp) override { draw(rp->getRenderTarget()); };
   void draw(sf::RenderTarget *target);
@@ -23,7 +20,7 @@ public:
   void scale(float sx, float sy, Vector2D origin) override;
 
 protected:
-  sf::Sprite texture;
+  sf::Sprite sprite;
 };
 
 #endif
