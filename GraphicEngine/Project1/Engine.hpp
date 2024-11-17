@@ -4,43 +4,48 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <vector>
 #include "BitmapHandler.hpp"
+#include "DrawableObject.hpp"
+#include "Initializer.hpp"
 #include "PrimitiveRenderer.hpp"
 #include "InputState.hpp"
 #include "Renderer.hpp"
-#include "Player.hpp"
+#include "ObjectManager.hpp"
+#include "UpdatableObject.hpp"
 
-class Engine : public Renderer
+class Engine : public Renderer, public Initializer, public ObjectManager
 {
 public:
-    // Konstruktor i destruktor
     Engine();
     ~Engine();
 
-    // Metody publiczne
-    bool init(); // Inicjalizacja biblioteki graficznej
+    bool init();
     void setGraphicsMode(bool fullscreen, sf::VideoMode videoMode);
     void setParameters(int frameRate, bool enableKeyboard, bool enableMouse);
-    void run(); // G³ówna pêtla gry
+    void run();
     PrimitiveRenderer *getPrimitiveRenderer() override;
     sf::RenderTarget *getRenderTarget() override;
-    InputState getInputState();
+    void beginPrimitiveBatch() override;
+    void endPrimitiveBatch() override;
+    void addObject(GameObject* obj) override;
+    void removeObject(GameObject* obj) override;
+    BitmapHandler* getBitmapHandler() override;
 private:
-    // Metody prywatne
+    InputState getInputState();
     bool loadAssets();
     bool initializeObjects();
     void handleEvents(); 
-    void update(); // Aktualizacja logiki gry
+    void update();
     void render();
     void draw();
-    void beginPrimitiveBatch();
-    void endPrimitiveBatch();
     void clearScreen(const sf::Color& color);
     void logError(const std::string& message);
     void cleanup();
-
     InputState inputState;
-
+    std::vector<GameObject *> objects;
+    std::vector<DrawableObject *> drawables;
+    std::vector<UpdatableObject *> updatables;
 
     sf::RenderWindow* window;
     sf::RenderTexture renderTexture;
@@ -56,12 +61,6 @@ private:
     float rotation = 0;
     
     BitmapHandler bitmapHandler;
-
-
-    // temporary 
-    Player *player;
-
-
 };
 
 #endif

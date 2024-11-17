@@ -4,7 +4,8 @@
 #include "GameObject.hpp"
 #include "Renderer.hpp"
 
-class DrawableObject : public GameObject {
+class DrawableObject : public virtual GameObject {
+public:
   virtual void draw(Renderer *rp) = 0;
 };
 #endif

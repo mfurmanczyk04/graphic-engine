@@ -1,11 +1,12 @@
 // Engine.cpp
 #include "Engine.hpp"
 
-#include "LineSegment.hpp"
-#include "Point2D.hpp"
+#include "BitmapHandler.hpp"
+#include "UpdatableObject.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <cwchar>
 #include <iostream>
 
 
@@ -77,9 +78,16 @@ bool Engine::loadAssets() {
   return true;
 }
 
+BitmapHandler* Engine::getBitmapHandler() {
+  return &bitmapHandler;
+}
 
 bool Engine::initializeObjects() {
-  player = new Player({200.0, 200.0}, &bitmapHandler);
+  /*
+  for (auto obj : objects) { 
+    if (!obj->init(this)) return false;
+  }
+  */
   return true;
 }
 
@@ -136,8 +144,41 @@ void Engine::handleEvents()
 void Engine::update()
 {
   sf::Time elapsed = clock.getElapsedTime();
-  player->update(inputState);
+  for (auto obj : updatables) {
+    obj->update(inputState, this);
+  }
 }
+
+void Engine::addObject(GameObject* obj) {
+  obj->init(this); 
+  // Add to the general objects vector
+  objects.push_back(obj);
+  // Check for DrawableObject interface
+  if (auto drawable = dynamic_cast<DrawableObject*>(obj)) {
+      drawables.push_back(drawable);
+  }
+  // Check for UpdatableObject interface
+  if (auto updatable = dynamic_cast<UpdatableObject*>(obj)) {
+      updatables.push_back(updatable);
+  }
+}
+
+template <typename T>
+void removeFromVector(std::vector<T>& vec, T obj) {
+    vec.erase(std::remove(vec.begin(), vec.end(), obj), vec.end());
+}
+
+
+void Engine::removeObject(GameObject* obj) {
+  removeFromVector(objects, obj);
+  if (auto drawable = dynamic_cast<DrawableObject*>(obj)) {
+      removeFromVector(drawables, drawable);
+  }
+  if (auto updatable = dynamic_cast<UpdatableObject*>(obj)) {
+      removeFromVector(updatables, updatable);
+  }
+}
+
 
 
 
@@ -153,17 +194,7 @@ void Engine::endPrimitiveBatch() {
   renderTexture.draw(updatedSprite);
 }
 void Engine::draw() {
-  beginPrimitiveBatch();
-  LineSegment myLine({80, 80}, {200, 200}, sf::Color::Red);
-  myLine.rotate(clock.getElapsedTime().asSeconds()*360,myLine.getCenterPoint());
-  myLine.draw(primitiveRenderer);
-  Point2D marker(myLine.getCenterPoint(), sf::Color::Green);
-  marker.draw(primitiveRenderer);
-  primitiveRenderer->drawRect(80, 80, 20, 20, sf::Color::Blue, sf::Color::Cyan);
-  primitiveRenderer->drawCircle(400, 400, 20, sf::Color::Green, sf::Color::White);
-  endPrimitiveBatch();
-
-  player->draw(this);
+  for (auto obj : drawables) { obj->draw(this); }
 }
 
 void Engine::render()

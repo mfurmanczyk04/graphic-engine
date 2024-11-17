@@ -14,11 +14,9 @@ public:
   void draw(Renderer *rp) override { draw(rp->getRenderTarget()); };
   void draw(sf::RenderTarget *target);
 
-
   void translate(Vector2D vec) override;
   void rotate(float deg, Vector2D origin) override;
   void scale(float sx, float sy, Vector2D origin) override;
-
 protected:
   sf::Sprite sprite;
 };

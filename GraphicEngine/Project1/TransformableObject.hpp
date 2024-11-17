@@ -4,7 +4,7 @@
 #include "GameObject.hpp"
 #include "Vector2D.hpp"
 
-class TransformableObject : public GameObject {
+class TransformableObject : public virtual GameObject {
 public:
   virtual void translate(Vector2D vec)  = 0;
   virtual void rotate(float deg, Vector2D origin) = 0;
