@@ -7,9 +7,7 @@ class ShapeObject : public DrawableObject {
 public:  
   void virtual draw(PrimitiveRenderer *pr) = 0;
   void draw(Renderer *rp) override { 
-    rp->beginPrimitiveBatch();
     draw(rp->getPrimitiveRenderer()); 
-    rp->endPrimitiveBatch();
   }
 };
 #endif

@@ -1,6 +1,7 @@
 #include "BitmapHandler.hpp"
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <iostream>
 #include <stdexcept>
 
 
@@ -30,6 +31,7 @@ sf::Texture *BitmapHandler::getTexture(const std::string& name) {
   try {
     return &loadedTextures.at(name);
   } catch (std::out_of_range e) {
+    std::cerr << "[Bitmap Handler] no texture: " << name << "!" << std::endl;
     return nullptr;
   }
 }
