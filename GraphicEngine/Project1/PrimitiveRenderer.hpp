@@ -12,7 +12,7 @@ public:
   void drawEllipsis(float x, float y, float rx, float ry, sf::Color color, sf::Color fill = sf::Color::Transparent);
   void drawLine(float x0, float y0, float x1, float y1, sf::Color color);
   void drawPolyLine(const std::vector<Vector2D> &verts, sf::Color color);
-  void drawPoly(std::vector<Vector2D> &verts, sf::Color color, sf::Color fill = sf::Color::Transparent);
+  void drawPoly(std::vector<Vector2D> verts, sf::Color color, sf::Color fill = sf::Color::Transparent);
   void setPixel(int x, int y, sf::Color color);
   void setPixels(const std::vector<Vector2D> &verts, sf::Color color);
   void boundaryFill(int x, int y, sf::Color fillColor, sf::Color boundaryColor);
