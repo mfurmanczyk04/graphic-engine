@@ -31,8 +31,8 @@ int main()
     engine.addObject(player);
     engine.addObject(new HealthDisplay({40.0f, GAME_HEIGHT - 72.0f}, player));
     engine.addObject(new RockSpawner(
-      std::uniform_real_distribution(0.0, (double)GAME_WIDTH),
-      std::uniform_real_distribution(10.0, 20.0), 
+      std::uniform_real_distribution<double>(0.0, (double)GAME_WIDTH),
+      std::uniform_real_distribution<double>(10.0, 20.0), 
       GAME_HEIGHT));
 
     engine.run();
